@@ -28,3 +28,13 @@ class ProfileSerializerTests(APITestCase):
             'avatar_url': None
         }
         self.assertEqual(serializer.data, expected_data)
+        
+    def test_invalid_profile_serialization(self):
+        serializer = ProfileSerializer(data={})
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(set(serializer.errors.keys()), { 'slug' })
+        
+    def test_required_fields(self):
+        serializer = ProfileSerializer(data={'slug': 'slug-test'})
+        self.assertTrue(serializer.is_valid())
+        self.assertEqual(set(serializer.errors.keys()), set())
