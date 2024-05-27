@@ -17,6 +17,7 @@ pillow = "*"
 python-dotenv = "*"
 django-extensions = "*"
 graphviz = "*"
+drf-yasg = "*"
 
 [dev-packages]
 

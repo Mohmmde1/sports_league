@@ -22,9 +22,6 @@ load_dotenv()
 
 MODE = os.environ.get('MODE')
 
-if MODE == "docker":
-    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
-
 logger = logging.getLogger(__name__)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -53,7 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'debug_toolbar',
+    'drf_yasg',
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
@@ -65,10 +62,11 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'dj_rest_auth.registration',
     'django_extensions',
+    'settings'
 ]
 
 MIDDLEWARE = [
-      'debug_toolbar.middleware.DebugToolbarMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -140,16 +138,12 @@ DATABASES = {
     }
 }
 
-if MODE == "docker":
-    INTERNAL_IPS = [ip[:-1] + '1' for ip in ips] + ['127.0.0.1']
+
     
-DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': lambda request: False if False else True,
-}
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-AUTH_USER_MODEL = "wordmentor_auth.User"
+AUTH_USER_MODEL = "sports_league_auth.User"
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 ACCOUNT_ACTIVATION_DAYS = 7
 
@@ -163,10 +157,10 @@ MEDIA_URL = "/media/"
 
 
 REST_AUTH = {
-    'REGISTER_SERIALIZER': 'sports_league.serializers.CustomRegisterSerializer',
+    'REGISTER_SERIALIZER': 'sports_league_auth.serializers.CustomRegisterSerializer',
     "USE_JWT": True,
     "JWT_AUTH_HTTPONLY": False,
-    "USER_DETAILS_SERIALIZER": "sports_league.serializers.UserDetailSerializer"
+    "USER_DETAILS_SERIALIZER": "sports_league_auth.serializers.UserDetailSerializer"
 }
 
 AUTHENTICATION_BACKENDS = [
