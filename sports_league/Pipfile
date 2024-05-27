@@ -4,11 +4,21 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+Django = "3.2"
 djangorestframework = "*"
 markdown = "*"
 django-filter = "*"
+dj-rest-auth = {extras = ["with_social"], version = "*"}
+django-debug-toolbar = "*"
+psycopg2-binary = "*"
+djangorestframework-simplejwt = "*"
+django-cors-headers = "*"
+pillow = "*"
+python-dotenv = "*"
+django-extensions = "*"
+graphviz = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.12"
+python_version = "3.9"
