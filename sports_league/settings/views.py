@@ -21,14 +21,17 @@ class ProfileViewSet(mixins.RetrieveModelMixin,
 
     @action(detail=True, methods=['post'], url_path='upload-image')
     def upload_image(self, request, pk=None):
-        profile = self.get_object()
-        serializer = self.get_serializer(profile, data=request.data, partial=True)
+        try:
+            profile = self.get_object()
+            serializer = self.get_serializer(profile, data=request.data, partial=True)
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Profile.DoesNotExist:
+            return Response({"error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
 
     @action(detail=False, methods=['get'], url_path='by-user/(?P<user_id>[^/.]+)')
     def get_profile_by_user(self, request, user_id):
