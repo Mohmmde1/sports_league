@@ -14,10 +14,7 @@ class ProfileViewSetTests(APITestCase):
         self.user = User.objects.create_user(username='testuser', email="testuser@gmail.com", password='password')
         self.profile = Profile.objects.create(user=self.user)
         self.client = APIClient()
-        
-        # Obtain JWT token
-        refresh = RefreshToken.for_user(self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
+        self.client.force_authenticate(user=self.user)
     
     def test_retrieve_profile(self):
         url = reverse('profile-detail', kwargs={'pk': self.profile.id})
@@ -38,7 +35,7 @@ class ProfileViewSetTests(APITestCase):
         self.assertEqual(response.data['slug'], 'slug-1')
         
     def test_upload_image(self):
-        image_path = os.path.join('media', 'profile.png')
+        image_path = os.path.join('media', 'test' ,'profile.png')
         url = reverse('profile-upload-image', kwargs={'pk': self.profile.id})
         with open(image_path, 'rb') as image:
             response = self.client.post(url, {'avatar': image}, format='multipart')
@@ -50,8 +47,8 @@ class ProfileViewSetTests(APITestCase):
         response = self.client.post(url, {'avatar': 'invalid'}, format='multipart')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
     
-    def test_upload_image_inalid_profile_id(self):
-        image_path = os.path.join('media', 'profile.png')
+    def test_upload_image_invalid_profile_id(self):
+        image_path = os.path.join('media', 'test' ,'profile.png')
         url = reverse('profile-upload-image', kwargs={'pk': 100})
         with open(image_path, 'rb') as image:
             response = self.client.post(url, {'avatar': image}, format='multipart')
