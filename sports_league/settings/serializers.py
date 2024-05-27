@@ -1,12 +1,11 @@
+# serializers.py
 from sports_league_auth.serializers import UserSerializer
 from rest_framework import serializers
-
 from .models import Profile
 
 class ProfileSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = UserSerializer(read_only=True)
     avatar_url = serializers.SerializerMethodField()
-
 
     class Meta:
         model = Profile
@@ -19,6 +18,3 @@ class ProfileSerializer(serializers.ModelSerializer):
         if obj.avatar:
             return obj.avatar.url
         return None
-    
-
-    
