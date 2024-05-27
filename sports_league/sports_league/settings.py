@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    'sports_league_auth',
+    # 'sports_league_auth',
     'dj_rest_auth',
     'django.contrib.sites',
     'allauth',
@@ -149,7 +149,7 @@ DEBUG_TOOLBAR_CONFIG = {
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-AUTH_USER_MODEL = "wordmentor_auth.User"
+# AUTH_USER_MODEL = "sports_league_auth.User"
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 ACCOUNT_ACTIVATION_DAYS = 7
 
@@ -162,12 +162,12 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 MEDIA_URL = "/media/"
 
 
-REST_AUTH = {
-    'REGISTER_SERIALIZER': 'sports_league.serializers.CustomRegisterSerializer',
-    "USE_JWT": True,
-    "JWT_AUTH_HTTPONLY": False,
-    "USER_DETAILS_SERIALIZER": "sports_league.serializers.UserDetailSerializer"
-}
+# REST_AUTH = {
+#     'REGISTER_SERIALIZER': 'sports_league.serializers.CustomRegisterSerializer',
+#     "USE_JWT": True,
+#     "JWT_AUTH_HTTPONLY": False,
+#     "USER_DETAILS_SERIALIZER": "sports_league.serializers.UserDetailSerializer"
+# }
 
 AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
