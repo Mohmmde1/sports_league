@@ -62,7 +62,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'dj_rest_auth.registration',
     'django_extensions',
-    'settings'
+    'settings',
+    'league',
 ]
 
 MIDDLEWARE = [
@@ -161,6 +162,27 @@ REST_AUTH = {
     "USE_JWT": True,
     "JWT_AUTH_HTTPONLY": False,
     "USER_DETAILS_SERIALIZER": "sports_league_auth.serializers.UserDetailSerializer"
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=7),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKEN": False,
+    "BLACKLIST_AFTER_ROTATION": False,
+    "UPDATE_LAST_LOGIN": True,
+    "SIGNING_KEY": os.environ.get('SIMPLE_JWT_SIGNING_KEY', 'acomplexkey'),
+    "ALGORITHM": "HS512",
+}
+
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    },
 }
 
 AUTHENTICATION_BACKENDS = [
