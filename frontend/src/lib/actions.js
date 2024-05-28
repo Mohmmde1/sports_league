@@ -33,6 +33,7 @@ export async function login (formData) {
         response.refresh
       );
     }
+    return response;
   } catch (error) {
     // Handle errors
     console.error ('Error occurred during signing in:', error);
@@ -41,7 +42,7 @@ export async function login (formData) {
   }
 }
 
-export async function signup (formData) {
+export async function signup (formData) { 
   try {
     const data = {
       email: formData.email,
@@ -55,16 +56,15 @@ export async function signup (formData) {
       'auth/registration/',
       JSON.stringify (data)
     );
-    console.log (response);
     if (response.access) {
       await setSessionCookies (
         response.user,
         response.access,
         response.refresh
       );
-    } else {
-      throw new Error (`Response: ${response}`);
     }
+    console.log (response);
+    return response;
   } catch (error) {
     // Handle errors
     console.error ('Error occurred during signing up:', error);
