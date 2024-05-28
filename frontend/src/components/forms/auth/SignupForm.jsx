@@ -43,7 +43,7 @@ const SignupForm = ({setIsAuthenticated}) => {
         setIsAuthenticated(true);
         toast('Signup Successfully!');
       } else {
-        if (response.username || response.password1) {
+        if (response.username || response.password1 || response.email) {
           // Extract and display error messages
           const errorMessages = [];
   
@@ -52,6 +52,10 @@ const SignupForm = ({setIsAuthenticated}) => {
           }
           if (response.password1) {
             errorMessages.push(`Password: ${response.password1.join(', ')}`);
+          }
+  
+          if (response.email){
+            errorMessages.push(`Email: ${response.email}`);
           }
   
           toast(errorMessages.join(' '));
@@ -64,6 +68,7 @@ const SignupForm = ({setIsAuthenticated}) => {
       toast('Signup failed. Please try again.');
     }
   };
+  
   ;
 
   return (

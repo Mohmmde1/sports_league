@@ -63,7 +63,6 @@ export async function signup (formData) {
         response.refresh
       );
     }
-    console.log (response);
     return response;
   } catch (error) {
     // Handle errors
