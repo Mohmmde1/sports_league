@@ -145,4 +145,21 @@ export async function updateProfile (formData) {
 }
 
 
-
+export async function uploadFile(formData) {
+  try {
+    // Make a POST request to the file upload endpoint
+    const response = await apiService.postFile('league/csv_uploads/', formData, 'POST');
+    
+    // Handle the response accordingly
+    if (response.status === 'File uploaded successfully') {
+      console.log('File uploaded successfully:', response);
+      return response;
+    } else {
+      console.error('Error uploading file:', response);
+      throw new Error('Failed to upload file');
+    }
+  } catch (error) {
+    console.error('Error uploading file:', error);
+    throw error;
+  }
+}

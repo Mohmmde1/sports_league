@@ -4,7 +4,8 @@ import { useDropzone } from "react-dropzone";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { UploadIcon } from "lucide-react";
-
+import { uploadFile } from "@/lib/actions";
+import { toast } from "sonner";
 export default function Page() {
   const [file, setFile] = useState(null);
   const inputRef = useRef(null);
@@ -36,12 +37,18 @@ export default function Page() {
 
   const handleUpload = async () => {
     if (!file) return;
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      await uploadFile(formData);
 
-    const formData = new FormData();
-    formData.append("file", file);
-
-    // Handle file upload logic here
-    console.log("File ready to be uploaded:", file.name);
+      toast("File uploaded successfully");
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      toast("Failed to upload file")
+    }
+  
+  
   };
 
   return (
