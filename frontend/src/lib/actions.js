@@ -163,3 +163,13 @@ export async function uploadFile(formData) {
     throw error;
   }
 }
+
+export async function getTeams() {
+  try {
+    const response = await apiService.get('league/teams/');
+    return response;
+  } catch (error) {
+    console.error('Error fetching teams:', error);
+    throw error;
+  }
+}
