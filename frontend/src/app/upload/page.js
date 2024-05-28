@@ -6,7 +6,9 @@ import { Button } from "@/components/ui/button";
 import { UploadIcon } from "lucide-react";
 import { uploadFile } from "@/lib/actions";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 export default function Page() {
+  const router = useRouter();
   const [file, setFile] = useState(null);
   const inputRef = useRef(null);
 
@@ -43,6 +45,7 @@ export default function Page() {
       await uploadFile(formData);
 
       toast("File uploaded successfully");
+      router.push("/ranking");
     } catch (error) {
       console.error("Error uploading file:", error);
       toast("Failed to upload file")

@@ -71,16 +71,10 @@ export const columns = [
   },
   {
     accessorKey: "name",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Name
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
+    header: "Team",
     cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
+    enableSorting: false,
+    enableColumnFilter: true,
   },
   {
     accessorKey: "points",
@@ -166,7 +160,7 @@ export default function DataTableDemo({ data }) {
         </DropdownMenu>
         {Object.keys(rowSelection).length > 0 && (
           <Button
-            variant="outline"
+            variant="destructive"
             className="ml-2"
             onClick={handleDeleteSelected}
           >
