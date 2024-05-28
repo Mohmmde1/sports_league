@@ -149,10 +149,8 @@ export default function Home() {
             <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-12">
               <img
                 alt="Image"
-                className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-last"
-                height="310"
-                src="/placeholder.svg"
-                width="550"
+                src="/3d-casual-life-sun.png"
+
               />
               <div className="flex flex-col justify-center space-y-4">
                 <ul className="grid gap-6">
