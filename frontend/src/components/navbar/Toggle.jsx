@@ -7,6 +7,14 @@ import { Toggle } from "@/components/ui/toggle"
 
 export function ModeToggle() {
   const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = React.useState(false)
+
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Don't render the Toggle until mounted to avoid hydration mismatch
+  if (!mounted) return null
 
   return (
     <div className="flex items-center">
