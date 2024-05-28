@@ -18,8 +18,8 @@ import {
 import {signup} from '@/lib/actions';
 
 const signupFormSchema = z.object ({
-  firstname: z.string ().min(1),
-  lastname: z.string ().min(1),
+  firstname: z.string ().min (1),
+  lastname: z.string ().min (1),
   email: z.string ().email ({message: 'Invalid email address'}).min (1),
   username: z.string ().min (1),
   password1: z
@@ -36,15 +36,35 @@ const SignupForm = ({setIsAuthenticated}) => {
     mode: 'onChange',
   });
 
-  const onSubmit = async formData => {
+  const onSubmit = async (formData) => {
     try {
-      await signup (formData);
-      setIsAuthenticated (true);
-      toast ('Signup Successfully!');
+      const response = await signup(formData);
+      if (response.access) {
+        setIsAuthenticated(true);
+        toast('Signup Successfully!');
+      } else {
+        if (response.username || response.password1) {
+          // Extract and display error messages
+          const errorMessages = [];
+  
+          if (response.username) {
+            errorMessages.push(`Username: ${response.username.join(', ')}`);
+          }
+          if (response.password1) {
+            errorMessages.push(`Password: ${response.password1.join(', ')}`);
+          }
+  
+          toast(errorMessages.join(' '));
+        } else {
+          toast('An unexpected error occurred.');
+        }
+      }
     } catch (error) {
-      // Handle signup error
+      console.error('Error occurred during signing up:', error);
+      toast('Signup failed. Please try again.');
     }
   };
+  ;
 
   return (
     <Form {...form}>

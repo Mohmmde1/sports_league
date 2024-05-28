@@ -33,10 +33,15 @@ const LoginForm = ({setIsAuthenticated}) => {
 
   const onSubmit = async formData => {
     try {
-      await login (formData);
+      const response = await login (formData);
+      if(response.access) {
       setIsAuthenticated (true);
       toast ('Login Successfully!');
-      router.push ('/dashboard'); // Redirect to the home page
+      router.push ('/'); // Redirect to the home page
+      }else {
+        console.log(response);
+        toast (response.non_field_errors[0]);
+      }
     } catch (error) {
       // Handle login error
     }
