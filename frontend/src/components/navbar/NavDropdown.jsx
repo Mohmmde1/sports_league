@@ -26,7 +26,7 @@ const ProfileDropdown = ({profile, setIsAuthenticated}) => {
         <Avatar className="border-slate-300">
           {profile &&
             <AvatarImage
-              src={`${process.env.NEXT_PUBLIC_BACKEND_HOST}/${profile.avatar_url}`}
+              src={`${process.env.NEXT_PUBLIC_BACKEND_HOST}${profile.avatar_url}`}
             />}
           <AvatarFallback className="bg-gradient-to-r from-green-300 to-green-700 text-black">
             CN
