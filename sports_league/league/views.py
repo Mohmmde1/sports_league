@@ -17,7 +17,11 @@ class GameViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         # team1 != team 2
         if request.data['team1'] == request.data['team2']:
+            logger.error('Team 1 and Team 2 cannot be the same')
             return Response({'error': 'Team 1 and Team 2 cannot be the same'}, status=status.HTTP_400_BAD_REQUEST)
+        if request.data['team1_score'] < 0 or request.data['team2_score'] < 0:
+            logger.error('Scores cannot be negative')
+            return Response({'error': 'Scores cannot be negative'}, status=status.HTTP_400_BAD_REQUEST)
         response = super().create(request, *args, **kwargs)
         self.update_team_points()
         return response
