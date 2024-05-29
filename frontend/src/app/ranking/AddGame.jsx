@@ -14,7 +14,7 @@ export default function AddGame({data}) {
   return (
     <Dialog >
       <DialogTrigger asChild>
-        <Button variant="outline">Add Game</Button>
+        <Button className="ml-2">Add Game</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
