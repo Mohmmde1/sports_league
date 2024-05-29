@@ -15,7 +15,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, ChevronDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -23,9 +23,6 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -37,6 +34,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import AddGame from "./AddGame";
+import Add from "./Add";
+
 
 
 export const columns = [
@@ -88,13 +88,10 @@ export const columns = [
 
 export default function DataTableDemo({ data }) {
   const [sorting, setSorting] = useState([]);
-  const [columnFilters, setColumnFilters] = useState(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] = useState(
-    {}
-  );
+  const [columnFilters, setColumnFilters] = useState([]);
+  const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
+  
 
   const table = useReactTable({
     data,
@@ -120,6 +117,9 @@ export default function DataTableDemo({ data }) {
     // Implement your delete logic here
     console.log("Deleting rows: ", selectedRows.map((row) => row.original.id));
   };
+
+
+ 
 
   return (
     <div className="w-full">
@@ -158,6 +158,8 @@ export default function DataTableDemo({ data }) {
               })}
           </DropdownMenuContent>
         </DropdownMenu>
+        <AddGame data={data}/>
+        {/* <Add /> */}
         {Object.keys(rowSelection).length > 0 && (
           <Button
             variant="destructive"
@@ -167,6 +169,7 @@ export default function DataTableDemo({ data }) {
             Delete All Selected
           </Button>
         )}
+        
       </div>
       <div className="rounded-md border">
         <Table>
