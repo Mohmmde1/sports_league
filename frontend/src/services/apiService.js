@@ -10,6 +10,7 @@ const apiService = {
         headers: {
           Accept: 'application/json',
           Authorization: `Bearer ${accessToken}`,
+          cache: 'no-store'
         },
       })
         .then (response => response.json ())
@@ -32,6 +33,7 @@ const apiService = {
           Accept: 'application/json',
           'Content-Type': 'application/json',
           Authorization: `Bearer ${accessToken}`,
+          cache: 'no-store'
         },
       })
         .then (response => response.json ())

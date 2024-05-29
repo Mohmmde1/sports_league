@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import {getGames, getTeams} from '@/lib/actions'
 import DataTable from './RankTable';
 import {Card, CardContent, CardDescription, CardTitle} from '@/components/ui/card';
