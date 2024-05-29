@@ -145,4 +145,73 @@ export async function updateProfile (formData) {
 }
 
 
+export async function uploadFile(formData) {
+  try {
+    // Make a POST request to the file upload endpoint
+    const response = await apiService.postFile('league/csv_uploads/', formData, 'POST');
+    
+    // Handle the response accordingly
+    if (response.status === 'File uploaded successfully') {
+      console.log('File uploaded successfully:', response);
+      return response;
+    } else {
+      console.error('Error uploading file:', response);
+      throw new Error('Failed to upload file');
+    }
+  } catch (error) {
+    console.error('Error uploading file:', error);
+    throw error;
+  }
+}
 
+export async function getTeams() {
+  try {
+    const response = await apiService.get('league/teams/');
+    return response;
+  } catch (error) {
+    console.error('Error fetching teams:', error);
+    throw error;
+  }
+}
+
+export async function addGame(data){
+  try {
+    console.log('data:', data);
+    const response = await apiService.postUpdate('league/games/', JSON.stringify(data), 'post');
+    return response;
+  } catch (error) {
+    console.error('Error adding game:', error);
+    throw error;
+  }
+}
+
+export async function getGames() {
+  try {
+    const response = await apiService.get('league/games/');
+    return response;
+  } catch (error) {
+    console.error('Error fetching games:', error);
+    throw error;
+  }
+}
+
+export async function deleteGame(id) {
+  try {
+    const response = await apiService.delete(`league/games/${id}/`);
+    console.log('response:', response);
+    return response;
+  } catch (error) {
+    console.error('Error deleting game:', error);
+    throw error;
+  }
+}
+
+export async function editGame(data) {
+  try {
+    const response = await apiService.postUpdate(`league/games/${data.id}/`, JSON.stringify(data), 'put');
+    return response;
+  } catch (error) {
+    console.error('Error editing game:', error);
+    throw error;
+  }
+}

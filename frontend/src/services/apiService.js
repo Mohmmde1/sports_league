@@ -10,6 +10,7 @@ const apiService = {
         headers: {
           Accept: 'application/json',
           Authorization: `Bearer ${accessToken}`,
+          cache: 'no-store'
         },
       })
         .then (response => response.json ())
@@ -32,6 +33,7 @@ const apiService = {
           Accept: 'application/json',
           'Content-Type': 'application/json',
           Authorization: `Bearer ${accessToken}`,
+          cache: 'no-store'
         },
       })
         .then (response => response.json ())
@@ -54,6 +56,7 @@ const apiService = {
         headers: {
           Accept: 'application/json',
           Authorization: `Bearer ${accessToken}`,
+          Cache: 'no-cache',
         },
       })
         .then (response => response.json ())
@@ -67,47 +70,39 @@ const apiService = {
     });
   },
   delete: async function (url) {
-    const accessToken = getAccessToken ();
-    return new Promise ((resolve, reject) => {
-      fetch (`${process.env.NEXT_PUBLIC_API_HOST}/${url}`, {
+    const accessToken = getAccessToken();
+    return new Promise((resolve, reject) => {
+      fetch(`${process.env.NEXT_PUBLIC_API_HOST}/${url}`, {
         method: 'DELETE',
         headers: {
           Accept: 'application/json',
           Authorization: `Bearer ${accessToken}`,
         },
-      }).catch (error => {
-        reject (error);
+      })
+      .then(async response => {
+        // Check if the response status indicates success
+        if (response.ok) {
+          // Check if there's a body to parse
+          const text = await response.text();
+          return text ? JSON.parse(text) : {};
+        } else {
+          // Handle errors appropriately
+          const text_2 = await response.text();
+          const error = text_2 ? JSON.parse(text_2) : { error: 'Unknown error' };
+          throw new Error(error.error || 'Delete request failed');
+        }
+      })
+      .then(json => {
+        console.log('Response:', json);
+        resolve(json);
+      })
+      .catch(error => {
+        console.error('Error deleting game:', error);
+        reject(error);
       });
     });
   },
-  deleteBulk: async function (url, data) {
-    const accessToken = getAccessToken();
-    console.log("delete", url, data);
-    return new Promise((resolve, reject) => {
-        fetch(`${process.env.NEXT_PUBLIC_API_HOST}/${url}`, {
-            method: "DELETE",
-            headers: {
-                Accept: "application/json",
-                Authorization: `Bearer ${accessToken}`,
-                "Content-Type": "application/json", // Set Content-Type header
-            },
-            body: JSON.stringify(data), // Use the data parameter directly
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error deleting books');
-            }
-            return response.json();
-        })
-        .then(data => {
-            resolve(data);
-        })
-        .catch((error) => {
-            reject(error);
-        });
-    });
-},
-
+  
 
   postWithoutToken: async function (url, data) {
     console.log ('post', url, data);

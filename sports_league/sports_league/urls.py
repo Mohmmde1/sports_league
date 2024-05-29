@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import os
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.conf.urls.static import static
@@ -33,6 +34,7 @@ schema_view = get_schema_view(
         contact=openapi.Contact(email="contact@local.dev"),
         license=openapi.License(name="BSD License"),
     ),
+    url=f"http://localhost:8000/api/v1/",
     public=True,
     permission_classes=(permissions.AllowAny,),
 )
@@ -47,6 +49,7 @@ urlpatterns = [
 urlpatterns += [
     path(api + 'auth/', include("sports_league_auth.urls")),
     path(api + "profile/", include("settings.urls")),
+    path(api + "league/", include("league.urls")),
 ]
 
 if settings.DEBUG:

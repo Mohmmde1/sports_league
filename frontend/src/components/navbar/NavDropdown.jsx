@@ -36,22 +36,7 @@ const ProfileDropdown = ({profile, setIsAuthenticated}) => {
       <DropdownMenuContent className="w-40">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          asChild
-          className={
-            pathname === '/books'
-              ? 'bg-muted hover:bg-muted'
-              : 'hover:bg-transparent hover:underline'
-          }
-        >
-
-          <Link href="/books">
-            <LibraryBig className="mr-2 h-4 w-4" />
-
-            <span>Books</span>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
+      
         <DropdownMenuItem
           asChild
           className={
@@ -71,8 +56,8 @@ const ProfileDropdown = ({profile, setIsAuthenticated}) => {
             onClick={async () => {
               try {
                 await logout (); 
-                setIsAuthenticated (false); // Update the authentication state
                 router.push ('/'); // Redirect to the home page
+                setIsAuthenticated (false); // Update the authentication state
               } catch (error) {
                 console.error ('Error during logout:', error);
                 // Optionally, handle the error state
