@@ -42,9 +42,9 @@ export default function Page() {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      await uploadFile(formData);
+      const response = await uploadFile(formData);
 
-      toast("File uploaded successfully");
+      toast(response['status']);
       router.push("/ranking");
     } catch (error) {
       console.error("Error uploading file:", error);

@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/form';
 
 import {signup} from '@/lib/actions';
+import { useRouter } from 'next/navigation';
 
 const signupFormSchema = z.object ({
   firstname: z.string ().min (1),
@@ -31,6 +32,7 @@ const signupFormSchema = z.object ({
 });
 
 const SignupForm = ({setIsAuthenticated}) => {
+  const router = useRouter();
   const form = useForm ({
     resolver: zodResolver (signupFormSchema),
     mode: 'onChange',
@@ -42,6 +44,7 @@ const SignupForm = ({setIsAuthenticated}) => {
       if (response.access) {
         setIsAuthenticated(true);
         toast('Signup Successfully!');
+        router.push('/upload');
       } else {
         if (response.username || response.password1 || response.email) {
           // Extract and display error messages
