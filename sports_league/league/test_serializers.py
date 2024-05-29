@@ -8,7 +8,7 @@ class SerializerTests(TestCase):
     def setUp(self):
         self.team_data = {'name': 'Team A', 'points': 10}
         self.game_data = {'team1': {'name': 'Team A', 'points': 10}, 'team2': {'name': 'Team B', 'points': 8}, 'team1_score': 2, 'team2_score': 1}
-        self.csv_upload_data = {'file_name': 'example.csv', 'file_content': 'example content'}
+        self.csv_upload_data = {'file_name': 'example.csv', 'file_content': b"Team A,2,Team B,1\nTeam C,0,Team D,0\n"}
     
     def test_team_serializer(self):
         serializer = TeamSerializer(data=self.team_data)
@@ -29,8 +29,7 @@ class SerializerTests(TestCase):
     
     def test_csv_upload_serializer(self):
         # Create test data (a CSV file)
-        csv_content = b"Team A,2,Team B,1\nTeam C,0,Team D,0\n"
-        csv_file = SimpleUploadedFile("test.csv", csv_content, content_type="text/csv")
+        csv_file = SimpleUploadedFile(self.csv_upload_data['file_name'], self.csv_upload_data['file_content'], content_type="text/csv")
 
         # Prepare data to pass to the serializer
         data = {'file': csv_file}
@@ -51,7 +50,7 @@ class SerializerTests(TestCase):
         uploaded_csv = CSVUpload.objects.first()
         with uploaded_csv.file.open(mode='rb') as f:
             uploaded_content = f.read()
-        self.assertEqual(uploaded_content, csv_content)
+        self.assertEqual(uploaded_content, self.csv_upload_data['file_content'])
 
         # Clean up - delete the CSVUpload object
         uploaded_csv.delete()
