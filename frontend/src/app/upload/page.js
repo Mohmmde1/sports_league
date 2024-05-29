@@ -59,7 +59,7 @@ export default function Page() {
       <div className="text-center">
         <h1 className="text-3xl font-bold">Upload a File</h1>
         <p className="text-gray-500 dark:text-gray-400">
-          Drag and drop a file or click to select a file from your device.
+          Drag and drop a file or click to select a .csv file from your device.
         </p>
       </div>
       <div
