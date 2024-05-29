@@ -56,8 +56,8 @@ const ProfileDropdown = ({profile, setIsAuthenticated}) => {
             onClick={async () => {
               try {
                 await logout (); 
-                setIsAuthenticated (false); // Update the authentication state
                 router.push ('/'); // Redirect to the home page
+                setIsAuthenticated (false); // Update the authentication state
               } catch (error) {
                 console.error ('Error during logout:', error);
                 // Optionally, handle the error state
