@@ -6,6 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +24,9 @@ export default function RankingsDialog({ isOpen, onClose, rankings }) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Team Rankings</DialogTitle>
+          <DialogDescription>
+            Each team is ranked based on their performance in the league. The ranking system assigns 3 points for a win, 0 points for a loss, and 1 point for a settlement.
+          </DialogDescription>
         </DialogHeader>
         <div className="rounded-md border">
           <Table>

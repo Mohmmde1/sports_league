@@ -83,8 +83,8 @@ const columns = [
           try{
             const response = await deleteGame(row.original.id)
 
-              toast("Game deleted successfully")
-              window.location.reload()
+            window.location.reload()
+            toast("Game deleted successfully")
             
 
           } catch (error) {
