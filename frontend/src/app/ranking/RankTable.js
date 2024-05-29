@@ -30,7 +30,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import AddGame from "./AddGame";
+import EditGame from "./EditGame";
 import RankingsDialog from "./RankingsDialog"; // Import the RankingsDialog component
+import { deleteGame } from "@/lib/actions";
+
+
 
 const columns = [
   {
@@ -70,10 +74,8 @@ const columns = [
     header: "Actions",
     cell: ({ row }) => (
       <div>
-        <Button variant="outline" onClick={() => handleEdit(row.original.id)}>
-          Edit
-        </Button>
-        <Button variant="destructive" className="ml-2" onClick={() => handleDelete(row.original.id)}>
+        <EditGame data={row.original} />
+        <Button variant="destructive" className="ml-2" onClick={async () => deleteGame(row.original.id)}>
           Delete
         </Button>
       </div>

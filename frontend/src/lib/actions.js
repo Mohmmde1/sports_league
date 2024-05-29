@@ -194,3 +194,23 @@ export async function getGames() {
     throw error;
   }
 }
+
+export async function deleteGame(id) {
+  try {
+    const response = await apiService.delete(`league/games/${id}/`);
+    return response;
+  } catch (error) {
+    console.error('Error deleting game:', error);
+    throw error;
+  }
+}
+
+export async function editGame(data) {
+  try {
+    const response = await apiService.postUpdate(`league/games/${data.id}/`, JSON.stringify(data), 'put');
+    return response;
+  } catch (error) {
+    console.error('Error editing game:', error);
+    throw error;
+  }
+}

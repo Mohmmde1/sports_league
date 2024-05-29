@@ -1,101 +1,94 @@
-'use client';
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/r8LPCNqu0TW
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
-import {useEffect, useState} from 'react';
-import {Button} from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import {
+  Dialog,
+  DialogContent,
   DialogTrigger,
-  DialogTitle,
   DialogDescription,
   DialogHeader,
-  DialogContent,
-  Dialog,
+  DialogTitle,
 } from '@/components/ui/dialog';
-import {Label} from '@/components/ui/label';
+import {Button} from '@/components/ui/button';
+import {editGame, getTeams} from '@/lib/actions';
+import {Input} from '@/components/ui/input';
 import {
-  SelectValue,
+  Select,
   SelectTrigger,
+  SelectValue,
   SelectItem,
   SelectContent,
-  Select,
 } from '@/components/ui/select';
-import {Input} from '@/components/ui/input';
-import {addGame, getTeams} from '@/lib/actions'; // Adjust the import path accordingly
-import {toast} from 'sonner';
 
-export default function AddGame() {
-  const [team1Id, setTeam1Id] = useState('');
-  const [team2Id, setTeam2Id] = useState('');
-  const [team1Score, setTeam1Score] = useState('');
-  const [team2Score, setTeam2Score] = useState('');
-  const [teams, setTeams] = useState([]);
+import {useEffect, useState} from 'react';
+import { toast } from 'sonner';
 
-  const handleSubmit = async e => {
-    e.preventDefault();
-
-    const formattedData = {
-      team1: {
-        name: team1Id || '',
-        points: 0
-      },
-      team2: {
-        name: team2Id || '',
-        points: 0
-      },
-      team1_score: parseInt(team1Score, 10),
-      team2_score: parseInt(team2Score, 10),
-    };
-
-    try {
-      const response = await addGame(formattedData);
-      if (response.id) {
-        console.log('Game added successfully:', response);
-        toast('Game added successfully');
-        window.location.reload();
-      } else {
-        console.error('Error adding game:', response.error);
-        toast(response.error);
-      }
-    } catch (error) {
-      console.error('Error adding game:', error);
-    }
-  };
-
-  useEffect(() => {
-    const fetchTeams = async () => {
-      // Fetch teams data
-      await getTeams().then(data => {
-        setTeams(data);
+export default function EditGame (data) {
+  const [teams, setTeams] = useState ([]);
+  const [team1Name, setTeam1Name] = useState (data.data.team1.name);
+  const [team1Score, setTeam1Score] = useState (data.data.team1_score);
+  const [team2Name, setTeam2Name] = useState (data.data.team2.name);
+  const [team2Score, setTeam2Score] = useState (data.data.team2_score);
+  useEffect (() => {
+    const fetchData = async () => {
+      await getTeams ().then (teamsData => {
+        console.log ('teamsData', teamsData);
+        setTeams (teamsData);
       });
     };
-
-    fetchTeams();
+    fetchData ();
+    console.log ('data:', data);
   }, []);
-
+  const handleEdit = async e => {
+    e.preventDefault ();
+    const formattedData = {
+      id: data.data.id,
+      team1: {
+        name: team1Name || '',
+        points: team1Score,
+      },
+      team2: {
+        name: team2Name || '',
+        points: team2Score,
+      },
+    };
+    try {
+      const response = await editGame (formattedData);
+      if (response.id) {
+        console.log ('Game edited successfully:', response);
+        toast ('Game edited successfully');
+        window.location.reload()
+      } else {
+        toast (response.error);
+        console.error ('Error editing game:', response.error);
+      }
+    } catch (error) {
+      console.error ('Error editing game:', error);
+    }
+  }
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="ml-2">Add Game</Button>
+
+        <Button variant="outline">
+          Edit
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add Game</DialogTitle>
+          <DialogTitle>Edit Game</DialogTitle>
           <DialogDescription>
-            Enter the details for the game you want to add.
+            Enter the details for the game you want to edit.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleEdit}>
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label htmlFor="team-name-1">Team Name</Label>
               <Select
                 id="team-name-1"
                 onValueChange={value => {
-                  setTeam1Id(value);
+                  setTeam1Name(value);
                 }}
+                defaultValue={team1Name}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select team name" />
@@ -124,8 +117,9 @@ export default function AddGame() {
               <Select
                 id="team-name-2"
                 onValueChange={value => {
-                  setTeam2Id(value);
+                  setTeam2Name(value);
                 }}
+                defaultValue={team2Name}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select team name" />

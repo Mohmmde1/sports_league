@@ -52,9 +52,21 @@ class GameViewSet(viewsets.ModelViewSet):
 
 
     def update(self, request, *args, **kwargs):
-        response = super().update(request, *args, **kwargs)
+        logger.info('Updating game')
+        logger.info(request.data)
+        team1_data = request.data.get('team1')
+        team2_data = request.data.get('team2')
+        team1_score = request.data.get('team1_score')
+        team2_score = request.data.get('team2_score')
+        game = Game.objects.get(id=request.data.get('id'))
+        game.team1_score = team1_data['points']
+        game.team2_score = team2_data['points']
+        game.team1 = Team.objects.get(name=team1_data['name'])
+        game.team2 = Team.objects.get(name=team2_data['name'])
+        game.save()
+
         self.update_team_points()
-        return response
+        return Response(GameSerializer(game).data, status=status.HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
         response = super().destroy(request, *args, **kwargs)
