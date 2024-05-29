@@ -12,8 +12,8 @@ export default async function Layout({ children}) {
 
         <div className="container m-11">
             <Card className="m-11 space-x-5 space-y-5 ">
-            <CardTitle className="m-4" >Ranking</CardTitle>
-            <CardDescription >View the current ranking of teams in the league</CardDescription>
+            <CardTitle className="m-4" >Manage Games</CardTitle>
+            <CardDescription >View the current games of teams in the league</CardDescription>
             <CardContent>
 
             <DataTableDemo  games={games} rankings={ranking}/>

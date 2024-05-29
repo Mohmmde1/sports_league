@@ -4,7 +4,7 @@
  * @see https://v0.dev/t/r8LPCNqu0TW
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Button} from '@/components/ui/button';
 import {
   DialogTrigger,
@@ -23,37 +23,56 @@ import {
   Select,
 } from '@/components/ui/select';
 import {Input} from '@/components/ui/input';
-import {addGame} from '@/lib/actions'; // Adjust the import path accordingly
+import {addGame, getTeams} from '@/lib/actions'; // Adjust the import path accordingly
 import {toast} from 'sonner';
-export default function AddGame({data}) {
-  const [team1Id, setTeam1Id] = useState ('');
-  const [team2Id, setTeam2Id] = useState ('');
-  const [team1Score, setTeam1Score] = useState ('');
-  const [team2Score, setTeam2Score] = useState ('');
+
+export default function AddGame() {
+  const [team1Id, setTeam1Id] = useState('');
+  const [team2Id, setTeam2Id] = useState('');
+  const [team1Score, setTeam1Score] = useState('');
+  const [team2Score, setTeam2Score] = useState('');
+  const [teams, setTeams] = useState([]);
 
   const handleSubmit = async e => {
-    e.preventDefault ();
+    e.preventDefault();
 
     const formattedData = {
-      team1_score: parseInt (team1Score, 10) ,
-      team2_score: parseInt (team2Score, 10) ,
-      team1: parseInt (team1Id, 10) || 0,
-      team2: parseInt (team2Id, 10) || 0,
+      team1: {
+        name: team1Id || '',
+        points: 0
+      },
+      team2: {
+        name: team2Id || '',
+        points: 0
+      },
+      team1_score: parseInt(team1Score, 10),
+      team2_score: parseInt(team2Score, 10),
     };
 
     try {
-      const response = await addGame (formattedData);
+      const response = await addGame(formattedData);
       if (response.id) {
-        console.log ('Game added successfully:', response);
-        toast ('Game added successfully');
+        console.log('Game added successfully:', response);
+        toast('Game added successfully');
       } else {
-        console.error ('Error adding game:', response.error);
-        toast (response.error);
+        console.error('Error adding game:', response.error);
+        toast(response.error);
       }
     } catch (error) {
-      console.error ('Error adding game:', error);
+      console.error('Error adding game:', error);
     }
   };
+
+  useEffect(() => {
+    const fetchTeams = async () => {
+      // Fetch teams data
+      await getTeams().then(data => {
+        setTeams(data);
+      });
+    };
+
+    fetchTeams();
+  }, []);
 
   return (
     <Dialog>
@@ -74,15 +93,14 @@ export default function AddGame({data}) {
               <Select
                 id="team-name-1"
                 onValueChange={value => {
-                  const selectedTeam = data.find (team => team.name === value);
-                  setTeam1Id (selectedTeam ? selectedTeam.id : '');
+                  setTeam1Id(value);
                 }}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select team name" />
                 </SelectTrigger>
                 <SelectContent>
-                  {data.map (team => (
+                  {teams.map(team => (
                     <SelectItem key={team.id} value={team.name}>
                       {team.name}
                     </SelectItem>
@@ -97,7 +115,7 @@ export default function AddGame({data}) {
                 placeholder="Enter team points"
                 type="number"
                 value={team1Score}
-                onChange={e => setTeam1Score (e.target.value)}
+                onChange={e => setTeam1Score(e.target.value)}
               />
             </div>
             <div className="space-y-2">
@@ -105,15 +123,14 @@ export default function AddGame({data}) {
               <Select
                 id="team-name-2"
                 onValueChange={value => {
-                  const selectedTeam = data.find (team => team.name === value);
-                  setTeam2Id (selectedTeam ? selectedTeam.id : '');
+                  setTeam2Id(value);
                 }}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select team name" />
                 </SelectTrigger>
                 <SelectContent>
-                  {data.map (team => (
+                  {teams.map(team => (
                     <SelectItem key={team.id} value={team.name}>
                       {team.name}
                     </SelectItem>
@@ -128,7 +145,7 @@ export default function AddGame({data}) {
                 placeholder="Enter team points"
                 type="number"
                 value={team2Score}
-                onChange={e => setTeam2Score (e.target.value)}
+                onChange={e => setTeam2Score(e.target.value)}
               />
             </div>
           </div>

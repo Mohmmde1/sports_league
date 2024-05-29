@@ -7,10 +7,11 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
+  getPaginationRowModel,getSortedRowModel,    getFilteredRowModel,
+
   useReactTable,
 } from "@tanstack/react-table";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ArrowUpDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,6 +36,7 @@ const columns = [
   {
     accessorKey: "id",
     header: "ID",
+    enableSorting: true,
   },
   {
     accessorKey: "team1",
@@ -52,7 +54,16 @@ const columns = [
   },
   {
     accessorKey: "team2_score",
-    header: "Team 2 Score",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Team 2 Score
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )}
   },
   {
     id: "actions",
@@ -74,16 +85,23 @@ export default function DataTableDemo({ games, rankings }) {
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [isRankingsDialogOpen, setIsRankingsDialogOpen] = useState(false);
+  const [sorting, setSorting] = useState([]);
 
   const table = useReactTable({
     data: games,
     columns,
+    onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+
+    onColumnVisibilityChange: setColumnVisibility,
     state: {
       columnFilters,
       columnVisibility,
+      sorting
     },
   });
 
@@ -100,9 +118,9 @@ export default function DataTableDemo({ games, rankings }) {
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter games..."
-          value={(table.getColumn("team1")?.getFilterValue()) ?? ""}
+          value={(table.getColumn("team1").getFilterValue()) ?? ""}
           onChange={(event) =>
-            table.getColumn("team1")?.setFilterValue(event.target.value)
+            table.getColumn("team1").setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

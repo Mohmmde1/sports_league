@@ -15,16 +15,41 @@ class GameViewSet(viewsets.ModelViewSet):
     serializer_class = GameSerializer
 
     def create(self, request, *args, **kwargs):
-        # team1 != team 2
-        if request.data['team1'] == request.data['team2']:
+        team1_data = request.data.get('team1')
+        team2_data = request.data.get('team2')
+        team1_score = request.data.get('team1_score')
+        team2_score = request.data.get('team2_score')
+
+        team1_name = team1_data['name']
+        team2_name = team2_data['name']
+
+        if team1_name == team2_name:
             logger.error('Team 1 and Team 2 cannot be the same')
             return Response({'error': 'Team 1 and Team 2 cannot be the same'}, status=status.HTTP_400_BAD_REQUEST)
-        if request.data['team1_score'] < 0 or request.data['team2_score'] < 0:
+        
+        if int(team1_score) < 0 or int(team2_score) < 0:
             logger.error('Scores cannot be negative')
             return Response({'error': 'Scores cannot be negative'}, status=status.HTTP_400_BAD_REQUEST)
-        response = super().create(request, *args, **kwargs)
+
+        team1, created1 = Team.objects.get_or_create(name=team1_name, defaults={'points': team1_data['points']})
+        team2, created2 = Team.objects.get_or_create(name=team2_name, defaults={'points': team2_data['points']})
+
+        if created1:
+            logger.info(f'Team created: {team1_name}')
+        if created2:
+            logger.info(f'Team created: {team2_name}')
+
+        game = Game.objects.create(
+            team1=team1,
+            team2=team2,
+            team1_score=team1_score,
+            team2_score=team2_score
+        )
+
         self.update_team_points()
-        return response
+
+        return Response(GameSerializer(game).data, status=status.HTTP_201_CREATED)
+
 
     def update(self, request, *args, **kwargs):
         response = super().update(request, *args, **kwargs)
