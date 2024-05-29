@@ -54,6 +54,7 @@ const apiService = {
         headers: {
           Accept: 'application/json',
           Authorization: `Bearer ${accessToken}`,
+          Cache: 'no-cache',
         },
       })
         .then (response => response.json ())

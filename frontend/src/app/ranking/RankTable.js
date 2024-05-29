@@ -113,7 +113,7 @@ const columns = [
   },
 ];
 
-export default function DataTableDemo({ games, rankings }) {
+export default function DataTable({ games, rankings }) {
   const [columnVisibility, setColumnVisibility] = useState({});
   const [isRankingsDialogOpen, setIsRankingsDialogOpen] = useState(false);
   const [sorting, setSorting] = useState([]);

@@ -1,5 +1,5 @@
 import {getGames, getTeams} from '@/lib/actions'
-import DataTableDemo from './RankTable';
+import DataTable from './RankTable';
 import {Card, CardContent, CardDescription, CardTitle} from '@/components/ui/card';
 
 export default async function Layout({ children}) {
@@ -16,7 +16,7 @@ export default async function Layout({ children}) {
             <CardDescription >View the current games of teams in the league</CardDescription>
             <CardContent>
 
-            <DataTableDemo  games={games} rankings={ranking}/>
+            {<DataTable  games={games} rankings={ranking}/>}
             </CardContent>
             {children}
             </Card>
