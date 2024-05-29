@@ -173,3 +173,14 @@ export async function getTeams() {
     throw error;
   }
 }
+
+export async function addGame(data){
+  try {
+    console.log('data:', data);
+    const response = await apiService.postUpdate('league/games/', JSON.stringify(data), 'post');
+    return response;
+  } catch (error) {
+    console.error('Error adding game:', error);
+    throw error;
+  }
+}

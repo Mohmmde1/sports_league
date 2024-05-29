@@ -7,7 +7,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 class TeamViewSet(viewsets.ModelViewSet):
-    queryset = Team.objects.all().order_by('-points', '-name')
+    queryset = Team.objects.all().order_by('-points', 'name')
     serializer_class = TeamSerializer
 
 class GameViewSet(viewsets.ModelViewSet):
@@ -15,6 +15,9 @@ class GameViewSet(viewsets.ModelViewSet):
     serializer_class = GameSerializer
 
     def create(self, request, *args, **kwargs):
+        # team1 != team 2
+        if request.data['team1'] == request.data['team2']:
+            return Response({'error': 'Team 1 and Team 2 cannot be the same'}, status=status.HTTP_400_BAD_REQUEST)
         response = super().create(request, *args, **kwargs)
         self.update_team_points()
         return response
