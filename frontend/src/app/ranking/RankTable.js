@@ -6,26 +6,23 @@ import { useState } from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
-  SortingState,
   VisibilityState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -36,44 +33,17 @@ import {
 } from "@/components/ui/table";
 import AddGame from "./AddGame";
 
-
-
-
 export const columns = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
   {
     id: "rank",
     header: "Rank",
     cell: ({ row }) => row.index + 1,
-    enableSorting: false,
     enableColumnFilter: false,
   },
   {
     accessorKey: "name",
     header: "Team",
     cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
-    enableSorting: false,
     enableColumnFilter: true,
   },
   {
@@ -87,46 +57,29 @@ export const columns = [
 ];
 
 export default function DataTableDemo({ data }) {
-  const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
-  const [rowSelection, setRowSelection] = useState({});
-  
 
   const table = useReactTable({
     data,
     columns,
-    onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
     state: {
-      sorting,
       columnFilters,
       columnVisibility,
-      rowSelection,
     },
   });
-
-  const handleDeleteSelected = () => {
-    const selectedRows = table.getSelectedRowModel().rows;
-    // Implement your delete logic here
-    console.log("Deleting rows: ", selectedRows.map((row) => row.original.id));
-  };
-
-
- 
 
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter teams..."
-          value={(table.getColumn("name")?.getFilterValue() ) ?? ""}
+          value={(table.getColumn("name")?.getFilterValue()) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
@@ -158,18 +111,7 @@ export default function DataTableDemo({ data }) {
               })}
           </DropdownMenuContent>
         </DropdownMenu>
-        <AddGame data={data}/>
-        {/* <Add /> */}
-        {Object.keys(rowSelection).length > 0 && (
-          <Button
-            variant="destructive"
-            className="ml-2"
-            onClick={handleDeleteSelected}
-          >
-            Delete All Selected
-          </Button>
-        )}
-        
+        <AddGame data={data} />
       </div>
       <div className="rounded-md border">
         <Table>
@@ -194,10 +136,7 @@ export default function DataTableDemo({ data }) {
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
+                <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -207,10 +146,7 @@ export default function DataTableDemo({ data }) {
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>
@@ -219,10 +155,6 @@ export default function DataTableDemo({ data }) {
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
         <div className="space-x-2">
           <Button
             variant="outline"
