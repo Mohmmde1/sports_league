@@ -1,7 +1,6 @@
 import csv
 import logging
 from django.db import transaction
-from django.db.models import F
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from .models import Team, Game, CSVUpload

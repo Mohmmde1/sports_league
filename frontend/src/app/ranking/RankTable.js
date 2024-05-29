@@ -1,14 +1,12 @@
-// DataTableDemo.js
-"use client"
+"use client";
 
 import * as React from "react";
 import { useState } from "react";
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,getSortedRowModel,    getFilteredRowModel,
-
+  getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { ChevronDown, ArrowUpDown } from "lucide-react";
@@ -35,43 +33,58 @@ import RankingsDialog from "./RankingsDialog"; // Import the RankingsDialog comp
 import { deleteGame } from "@/lib/actions";
 import { toast } from "sonner";
 
-
-
 const columns = [
   {
-    accessorKey: "id",
-    header: "ID",
+    accessorKey: "team1",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Team 1 <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => <div>{row.original.team1.name}</div>,
     enableSorting: true,
   },
   {
-    accessorKey: "team1",
-    header: "Team 1",
-    cell: ({ row }) => <div> {row.original.team1.name} </div>,
-  },
-  {
     accessorKey: "team1_score",
-    header: <div className="flex items-center">Team 1 Score</div>,
-    cell: ({ row }) => <div className="flex items-center"> {row.original.team1_score} </div>,
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Team 1 Score <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => <div className="flex items-center">{row.original.team1_score}</div>,
+    enableSorting: true,
   },
   {
     accessorKey: "team2",
-    header: "Team 2",
-    cell : ({ row }) => ( <div className="flex items-center"> {row.original.team2.name} </div> )
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Team 2 <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => <div className="flex items-center">{row.original.team2.name}</div>,
+    enableSorting: true,
   },
   {
     accessorKey: "team2_score",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Team 2 Score
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )},
-    cell: ({ row }) => ( <div className="flex items-ceneter"> {row.original.team2_score} </div>)
-
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Team 2 Score <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => <div className="flex items-center">{row.original.team2_score}</div>,
+    enableSorting: true,
   },
   {
     id: "actions",
@@ -79,19 +92,20 @@ const columns = [
     cell: ({ row }) => (
       <div>
         <EditGame data={row.original} />
-        <Button variant="destructive" className="ml-2" onClick={async () => {
-          try{
-            const response = await deleteGame(row.original.id)
-
-            window.location.reload()
-            toast("Game deleted successfully")
-            
-
-          } catch (error) {
-            console.error("Failed to delete game", error)
-            toast("Failed to delete game")
-          }
-          }}>
+        <Button
+          variant="destructive"
+          className="ml-2"
+          onClick={async () => {
+            try {
+              await deleteGame(row.original.id);
+              window.location.reload();
+              toast("Game deleted successfully");
+            } catch (error) {
+              console.error("Failed to delete game", error);
+              toast("Failed to delete game");
+            }
+          }}
+        >
           Delete
         </Button>
       </div>
@@ -100,7 +114,6 @@ const columns = [
 ];
 
 export default function DataTableDemo({ games, rankings }) {
-  const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [isRankingsDialogOpen, setIsRankingsDialogOpen] = useState(false);
   const [sorting, setSorting] = useState([]);
@@ -109,32 +122,19 @@ export default function DataTableDemo({ games, rankings }) {
     data: games,
     columns,
     onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-
     onColumnVisibilityChange: setColumnVisibility,
     state: {
-      columnFilters,
       columnVisibility,
-      sorting
+      sorting,
     },
   });
-
 
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter games..."
-          value={(table.getColumn("team1").getFilterValue()) ?? ""}
-          onChange={(event) =>
-            table.getColumn("team1").setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
@@ -145,20 +145,16 @@ export default function DataTableDemo({ games, rankings }) {
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
+              .map((column) => (
+                <DropdownMenuCheckboxItem
+                  key={column.id}
+                  className="capitalize"
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                >
+                  {column.id}
+                </DropdownMenuCheckboxItem>
+              ))}
           </DropdownMenuContent>
         </DropdownMenu>
         <AddGame data={games} />
@@ -175,18 +171,16 @@ export default function DataTableDemo({ games, rankings }) {
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>

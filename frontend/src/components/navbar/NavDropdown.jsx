@@ -36,22 +36,7 @@ const ProfileDropdown = ({profile, setIsAuthenticated}) => {
       <DropdownMenuContent className="w-40">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          asChild
-          className={
-            pathname === '/books'
-              ? 'bg-muted hover:bg-muted'
-              : 'hover:bg-transparent hover:underline'
-          }
-        >
-
-          <Link href="/books">
-            <LibraryBig className="mr-2 h-4 w-4" />
-
-            <span>Books</span>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
+      
         <DropdownMenuItem
           asChild
           className={
