@@ -1,5 +1,5 @@
 // RankingsDialog.js
-import React from "react";
+import React from 'react';
 import {
   Dialog,
   DialogContent,
@@ -7,8 +7,8 @@ import {
   DialogTitle,
   DialogFooter,
   DialogDescription,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 import {
   Table,
   TableBody,
@@ -16,7 +16,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function RankingsDialog({ isOpen, onClose, rankings }) {
   return (
@@ -28,26 +29,28 @@ export default function RankingsDialog({ isOpen, onClose, rankings }) {
             Each team is ranked based on their performance in the league. The ranking system assigns 3 points for a win, 0 points for a loss, and 1 point for a settlement.
           </DialogDescription>
         </DialogHeader>
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Rank</TableHead>
-                <TableHead>Team</TableHead>
-                <TableHead>Points</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {rankings.map((rank, index) => (
-                <TableRow key={rank.id}>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>{rank.name}</TableCell>
-                  <TableCell>{rank.points}</TableCell>
+        <ScrollArea className="h-[80vh] sm:h-[400px] w-full p-4">
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Rank</TableHead>
+                  <TableHead>Team</TableHead>
+                  <TableHead>Points</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+              </TableHeader>
+              <TableBody>
+                {rankings.map((rank, index) => (
+                  <TableRow key={rank.id}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{rank.name}</TableCell>
+                    <TableCell>{rank.points}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </ScrollArea>
         <DialogFooter>
           <Button variant="secondary" onClick={onClose}>
             Close
