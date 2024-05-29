@@ -93,7 +93,6 @@ class GameViewSet(viewsets.ModelViewSet):
     @staticmethod
     @transaction.atomic
     def update_team_points():
-        Team.objects.update(points=0)
         games = Game.objects.all()
         for game in games:
             game.team1.points += 3 * (game.team1_score > game.team2_score) + \
@@ -122,8 +121,9 @@ class CSVUploadViewSet(viewsets.ModelViewSet):
             csv_reader = csv.reader(file_data)
 
             with transaction.atomic():
-                # Remove all previous games
+                # Remove all previous games & teams
                 Game.objects.all().delete()
+                Team.objects.all().delete()
                 
                 for row in csv_reader:
                     team1_name, team1_score, team2_name, team2_score = row
