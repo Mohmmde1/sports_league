@@ -33,6 +33,7 @@ import AddGame from "./AddGame";
 import EditGame from "./EditGame";
 import RankingsDialog from "./RankingsDialog"; // Import the RankingsDialog component
 import { deleteGame } from "@/lib/actions";
+import { toast } from "sonner";
 
 
 
@@ -49,12 +50,13 @@ const columns = [
   },
   {
     accessorKey: "team1_score",
-    header: "Team 1 Score",
+    header: <div className="flex items-center">Team 1 Score</div>,
+    cell: ({ row }) => <div className="flex items-center"> {row.original.team1_score} </div>,
   },
   {
     accessorKey: "team2",
     header: "Team 2",
-    cell : ({ row }) => ( <div> {row.original.team2.name} </div> )
+    cell : ({ row }) => ( <div className="flex items-center"> {row.original.team2.name} </div> )
   },
   {
     accessorKey: "team2_score",
@@ -67,7 +69,9 @@ const columns = [
           Team 2 Score
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )}
+      )},
+    cell: ({ row }) => ( <div className="flex items-ceneter"> {row.original.team2_score} </div>)
+
   },
   {
     id: "actions",
@@ -75,7 +79,19 @@ const columns = [
     cell: ({ row }) => (
       <div>
         <EditGame data={row.original} />
-        <Button variant="destructive" className="ml-2" onClick={async () => deleteGame(row.original.id)}>
+        <Button variant="destructive" className="ml-2" onClick={async () => {
+          try{
+            const response = await deleteGame(row.original.id)
+
+              toast("Game deleted successfully")
+              window.location.reload()
+            
+
+          } catch (error) {
+            console.error("Failed to delete game", error)
+            toast("Failed to delete game")
+          }
+          }}>
           Delete
         </Button>
       </div>
@@ -107,13 +123,6 @@ export default function DataTableDemo({ games, rankings }) {
     },
   });
 
-  const handleEdit = (id) => {
-    // Implement edit functionality here
-  };
-
-  const handleDelete = (id) => {
-    // Implement delete functionality here
-  };
 
   return (
     <div className="w-full">

@@ -71,6 +71,7 @@ class GameViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         response = super().destroy(request, *args, **kwargs)
         self.update_team_points()
+        logger.info(response)
         return response
 
     def update_team_points(self):

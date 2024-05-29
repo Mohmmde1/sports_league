@@ -50,6 +50,10 @@ export default function AddGame() {
     };
 
     try {
+      if (!formattedData.team1_score || !formattedData.team2_score) {
+        toast('Please enter valid scores');
+        return;
+      }
       const response = await addGame(formattedData);
       if (response.id) {
         console.log('Game added successfully:', response);

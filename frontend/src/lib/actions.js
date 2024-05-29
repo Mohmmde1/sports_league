@@ -198,6 +198,7 @@ export async function getGames() {
 export async function deleteGame(id) {
   try {
     const response = await apiService.delete(`league/games/${id}/`);
+    console.log('response:', response);
     return response;
   } catch (error) {
     console.error('Error deleting game:', error);
