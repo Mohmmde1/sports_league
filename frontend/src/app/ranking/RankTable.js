@@ -5,11 +5,8 @@ import * as React from "react";
 import { useState } from "react";
 import {
   ColumnDef,
-  ColumnFiltersState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -32,56 +29,80 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import AddGame from "./AddGame";
+import RankingsDialog from "./RankingsDialog"; // Import the RankingsDialog component
 
-export const columns = [
+const columns = [
   {
-    id: "rank",
-    header: "Rank",
-    cell: ({ row }) => row.index + 1,
-    enableColumnFilter: false,
+    accessorKey: "id",
+    header: "ID",
   },
   {
-    accessorKey: "name",
-    header: "Team",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
-    enableColumnFilter: true,
+    accessorKey: "team1",
+    header: "Team 1",
+    cell: ({ row }) => <div> {row.original.team1.name} </div>,
   },
   {
-    accessorKey: "points",
-    header: () => <div className="text-right">Points</div>,
-    cell: ({ row }) => {
-      const points = row.getValue("points");
-      return <div className="text-right font-medium">{points}</div>;
-    },
+    accessorKey: "team1_score",
+    header: "Team 1 Score",
+  },
+  {
+    accessorKey: "team2",
+    header: "Team 2",
+    cell : ({ row }) => ( <div> {row.original.team2.name} </div> )
+  },
+  {
+    accessorKey: "team2_score",
+    header: "Team 2 Score",
+  },
+  {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => (
+      <div>
+        <Button variant="outline" onClick={() => handleEdit(row.original.id)}>
+          Edit
+        </Button>
+        <Button variant="destructive" className="ml-2" onClick={() => handleDelete(row.original.id)}>
+          Delete
+        </Button>
+      </div>
+    ),
   },
 ];
 
-export default function DataTableDemo({ data }) {
+export default function DataTableDemo({ games, rankings }) {
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
+  const [isRankingsDialogOpen, setIsRankingsDialogOpen] = useState(false);
 
   const table = useReactTable({
-    data,
+    data: games,
     columns,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
     state: {
       columnFilters,
       columnVisibility,
     },
   });
 
+  const handleEdit = (id) => {
+    // Implement edit functionality here
+  };
+
+  const handleDelete = (id) => {
+    // Implement delete functionality here
+  };
+
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter teams..."
-          value={(table.getColumn("name")?.getFilterValue()) ?? ""}
+          placeholder="Filter games..."
+          value={(table.getColumn("team1")?.getFilterValue()) ?? ""}
           onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+            table.getColumn("team1")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -111,7 +132,14 @@ export default function DataTableDemo({ data }) {
               })}
           </DropdownMenuContent>
         </DropdownMenu>
-        <AddGame data={data} />
+        <AddGame data={games} />
+        <Button
+          variant="primary"
+          className="ml-2"
+          onClick={() => setIsRankingsDialogOpen(true)}
+        >
+          Show Rankings
+        </Button>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -174,6 +202,12 @@ export default function DataTableDemo({ data }) {
           </Button>
         </div>
       </div>
+
+      <RankingsDialog
+        isOpen={isRankingsDialogOpen}
+        onClose={() => setIsRankingsDialogOpen(false)}
+        rankings={rankings}
+      />
     </div>
   );
 }

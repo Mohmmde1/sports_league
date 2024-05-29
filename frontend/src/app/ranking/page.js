@@ -1,10 +1,13 @@
-import {getTeams} from '@/lib/actions'
+import {getGames, getTeams} from '@/lib/actions'
 import DataTableDemo from './RankTable';
 import {Card, CardContent, CardDescription, CardTitle} from '@/components/ui/card';
 
 export default async function Layout({ children}) {
-    const teams = await getTeams();
-    console.log(teams);
+
+    const games = await getGames();
+
+    const ranking = await getTeams();
+      
     return(
 
         <div className="container m-11">
@@ -13,7 +16,7 @@ export default async function Layout({ children}) {
             <CardDescription >View the current ranking of teams in the league</CardDescription>
             <CardContent>
 
-            <DataTableDemo  data={teams}/>
+            <DataTableDemo  games={games} rankings={ranking}/>
             </CardContent>
             {children}
             </Card>

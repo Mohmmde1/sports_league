@@ -184,3 +184,13 @@ export async function addGame(data){
     throw error;
   }
 }
+
+export async function getGames() {
+  try {
+    const response = await apiService.get('league/games/');
+    return response;
+  } catch (error) {
+    console.error('Error fetching games:', error);
+    throw error;
+  }
+}
