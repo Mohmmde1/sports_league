@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: db
+    image: postgres:16
+    restart: always
+    user: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+    expose:
+      - 5432
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./sports_league
+      dockerfile: ./Dockerfile
+    command: ["sh", "/app/entrypoint.sh"]
+    volumes:
+      - ./sports_league:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./sports_league/.env
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app/frontend
+      - /app/frontend/node_modules
+    env_file:
+      - ./frontend/.env
+    depends_on:
+      - backend
+
+volumes:
+  db-data:
