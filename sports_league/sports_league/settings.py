@@ -11,35 +11,36 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 import os
+import logging
+import sys
+import dj_database_url
 from pathlib import Path
 from datetime import timedelta
-import logging
-import socket
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
 
-MODE = os.environ.get('MODE')
+# Determine the environment
+MODE = os.getenv('MODE', 'development')
 
 logger = logging.getLogger(__name__)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-^shogn8d(95%()dynml0#c-tqg$7#uz2-&eqz^t(c5o224*)0@'
+SECRET_KEY = os.getenv(
+    'SECRET_KEY', 'dgS8dt05tbyeRgStpFAHWQ7QOLZGCbi1j3YWJuhrYw8QM1xeOtql6bYS1LmlKU5dN5w')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
-
-
+# Example for production setup, replace with actual domains/IPs
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
 
 # Application definition
 
@@ -67,7 +68,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -102,8 +102,8 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-            'rest_framework.permissions.IsAuthenticated',
-        ]
+        'rest_framework.permissions.IsAuthenticated',
+    ]
 }
 
 LOGGING = {
@@ -111,7 +111,10 @@ LOGGING = {
     "disable_existing_loggers": False,
     "formatters": {
         "verbose": {
-            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}", "style": "{", }, },
+            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
+        },
+    },
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
@@ -125,24 +128,24 @@ LOGGING = {
     },
 }
 
-
 WSGI_APPLICATION = 'sports_league.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
+# # Use DATABASE_URL from environment if available, otherwise default to a local PostgreSQL setup
+if MODE.lower() == 'docker':
+    DATABASES = {
+        'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
+    }
+else:
+    DATABASES = {'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+    }}
 
+# Use a separate database for testing
+if 'test' in sys.argv:
+    DATABASES['default'] = dj_database_url.parse(
+        os.getenv('TEST_DATABASE_URL', 'sqlite:///db.sqlite3'))
 
-    
-
-CORS_ORIGIN_ALLOW_ALL = True
 
 AUTH_USER_MODEL = "sports_league_auth.User"
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
@@ -155,7 +158,6 @@ ACCOUNT_UNIQUE_EMAIL = True
 MEDIA_ROOT = BASE_DIR / "media"
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 MEDIA_URL = "/media/"
-
 
 REST_AUTH = {
     'REGISTER_SERIALIZER': 'sports_league_auth.serializers.CustomRegisterSerializer',
@@ -170,7 +172,7 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKEN": False,
     "BLACKLIST_AFTER_ROTATION": False,
     "UPDATE_LAST_LOGIN": True,
-    "SIGNING_KEY": os.environ.get('SIMPLE_JWT_SIGNING_KEY', 'acomplexkey'),
+    "SIGNING_KEY": os.getenv('SIMPLE_JWT_SIGNING_KEY', 'acomplexkey'),
     "ALGORITHM": "HS512",
 }
 
@@ -216,7 +218,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -227,7 +228,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/

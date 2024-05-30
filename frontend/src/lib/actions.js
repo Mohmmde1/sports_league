@@ -132,11 +132,8 @@ export async function updateProfile (formData) {
       'PUT'
     );
 
-    if (response.id) {
-      revalidatePath (`/profile/${data.username}`);
-    } else {
-      throw new Error (`Response: ${response}`);
-    }
+    return response;
+
   } catch (error) {
     // Handle errors
     console.error ('Error occurred during signing up:', error);

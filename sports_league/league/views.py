@@ -94,6 +94,7 @@ class GameViewSet(viewsets.ModelViewSet):
     @transaction.atomic
     def update_team_points():
         games = Game.objects.all()
+        Team.objects.update(points=0)
         for game in games:
             game.team1.points += 3 * (game.team1_score > game.team2_score) + \
                                 (game.team1_score == game.team2_score)

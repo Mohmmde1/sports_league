@@ -54,8 +54,15 @@ export function ProfileForm({profile}) {
 
   function onSubmit (data) {
     const updateProfileAsync = async () => {
-      await updateProfile (data);
-      toast ('Profile updated');
+
+      const response = await updateProfile (data);
+      if(response.id){
+
+        toast ('Profile updated');
+      }else {
+        toast ('Error updating profile');
+        
+      }
     };
 
     updateProfileAsync ();

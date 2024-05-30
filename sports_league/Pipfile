@@ -9,7 +9,6 @@ djangorestframework = "*"
 markdown = "*"
 django-filter = "*"
 dj-rest-auth = {extras = ["with_social"], version = "*"}
-django-debug-toolbar = "*"
 psycopg2-binary = "*"
 djangorestframework-simplejwt = "*"
 django-cors-headers = "*"
@@ -18,6 +17,7 @@ python-dotenv = "*"
 django-extensions = "*"
 graphviz = "*"
 drf-yasg = "*"
+dj-database-url = "*"
 
 [dev-packages]
 
