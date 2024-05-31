@@ -173,7 +173,11 @@ cd sports_league
 ```bash
 pipenv shell
 ```
+Install dependencies
 
+```bash
+  pipenv install
+```
 **Run the tests**:
 ```bash
 python manage.py test
