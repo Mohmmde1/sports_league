@@ -57,12 +57,21 @@ Install dependencies
 ```bash
   pipenv install
 ```
+Run migrations 
+
+```bash
+  python manage.py makemigrations
+  python manage.py migrate
+```
 
 Start the server
 
 ```bash
   python manage.py runserver 0.0.0.0:8000
 ```
+
+Verify the server is running by going to 
+[http://localhost:8000/swagger/](http://localhost:8000/swagger/)
 
 **Create a new terminal session**
 
@@ -96,7 +105,8 @@ Start the server
 ```bash
   npm run dev
 ```
-
+Verify the server is running by going to 
+[http://localhost:3000/](http://localhost:3000/)
 
 ## Run With Docker 
 
