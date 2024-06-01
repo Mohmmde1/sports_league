@@ -3,8 +3,10 @@
 
 This Django web application facilitates the management and display of a sports league's ranking table based on uploaded game results. It allows users, such as league administrators or managers, to upload CSV files containing game data, which is then processed to calculate team points and generate a ranking table. Users can also perform CRUD operations on game results, enabling them to add, edit, and delete games as needed. Additionally, the application offers unit tests for ensuring the reliability of its functionality. It is designed to be user-friendly, efficient, and extensible, catering to the needs of sports league organizers seeking a streamlined solution for managing league standings and game data.
 
-# Deployed Project is at http://34.42.119.254:3000/
-
+# Deployed Project is at 
+```bash
+  http://34.42.119.254:3000/
+```
 ## Features
 
 - Light/dark mode toggle
